@@ -10,8 +10,8 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 /**
- * A circle divided into 16 sectors. Fills the view; use a square aspect ratio so it renders as a circle.
- * Numbers displayed in order (clockwise from top): 7, 8, 9, 10, 11, 12, 13, 14, 15, 1, 2, 3, 9, 5, 6, 7.
+ * A circle divided into 15 sectors. Fills the view; use a square aspect ratio so it renders as a circle.
+ * Numbers start at 8 and go clockwise: 8, 9, 10, …, 15, 1, 2, …, 7 (so 8 is at 12 o'clock).
  */
 class SectorCircleView @JvmOverloads constructor(
     context: Context,
@@ -19,11 +19,11 @@ class SectorCircleView @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
 
-    private val sectorCount = 16
+    private val sectorCount = 15
     private val sweepAngle = 360f / sectorCount
 
-    /** Display order for each sector (clockwise from 12 o'clock). */
-    private val sectorNumbers = intArrayOf(7, 8, 9, 10, 11, 12, 13, 14, 15, 1, 2, 3, 9, 5, 6, 7)
+    /** Display order: 8 at top, then clockwise 9..15, 1..7. */
+    private val sectorNumbers = intArrayOf(8, 9, 10, 11, 12, 13, 14, 15, 1, 2, 3, 4, 5, 6, 7)
 
     private val strokePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.STROKE
@@ -49,7 +49,7 @@ class SectorCircleView @JvmOverloads constructor(
         rect.set(padding, padding, size - padding, size - padding)
 
         for (i in 0 until sectorCount) {
-            sectorPaint.color = if (i % 2 == 0) 0xFFE3F2FD.toInt() else 0xFFFFFFFF.toInt()
+            sectorPaint.color = if (i % 2 == 0) 0xFFA5D8F0.toInt() else 0xFFE8A0A0.toInt() // ice blue, rose red
             val startAngle = -90f + i * sweepAngle
             canvas.drawArc(rect, startAngle, sweepAngle, true, sectorPaint)
         }

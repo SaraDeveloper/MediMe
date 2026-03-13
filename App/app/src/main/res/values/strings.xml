@@ -7,11 +7,21 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="dropdown_hint">Select…</string>
+    <string name="dropdown_hint">How often?</string>
     <string-array name="dropdown_options">
-        <item>Option 1</item>
-        <item>Option 2</item>
-        <item>Option 3</item>
+        <item>Every 2 hours</item>
+        <item>Every 3 hours</item>
+        <item>Every 4 hours</item>
+        <item>Every 6 hours</item>
+        <item>Every 8 hours</item>
+        <item>Every 12 hours</item>
+        <item>Once daily</item>
+        <item>Twice daily</item>
+        <item>Three times daily</item>
+        <item>Every other day</item>
+        <item>Once a week</item>
+        <item>Every 2 weeks</item>
+        <item>Once a month</item>
     </string-array>
 
     <string name="lorem_ipsum">
