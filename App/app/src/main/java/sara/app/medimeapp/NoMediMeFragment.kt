@@ -37,7 +37,7 @@ class NoMediMeFragment : Fragment() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_add_box, null)
         setupSpinner(dialogView.findViewById(R.id.dialog_add_time_spinner), R.array.dialog_time_options)
         setupSpinner(dialogView.findViewById(R.id.dialog_add_till_when_spinner), R.array.dialog_till_when_options)
-        setupSpinner(dialogView.findViewById(R.id.dialog_add_color_spinner), R.array.dialog_color_options)
+        setupColorSpinner(dialogView.findViewById(R.id.dialog_add_color_spinner))
         MaterialAlertDialogBuilder(requireContext(), com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
             .setView(dialogView)
             .setPositiveButton(android.R.string.ok, null)
@@ -51,6 +51,21 @@ class NoMediMeFragment : Fragment() {
             setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         }
         spinner.adapter = adapter
+    }
+
+    private fun setupColorSpinner(spinner: Spinner) {
+        val colorNames = resources.getStringArray(R.array.dialog_color_options)
+        val colorValues = intArrayOf(
+            0xFFF44336.toInt(), // Red
+            0xFF2196F3.toInt(), // Blue
+            0xFF4CAF50.toInt(), // Green
+            0xFFFFEB3B.toInt(), // Yellow
+            0xFFFF9800.toInt(), // Orange
+            0xFF9C27B0.toInt(), // Purple
+            0xFFE91E63.toInt(), // Pink
+            0xFF009688.toInt(), // Teal
+        )
+        spinner.adapter = ColorSpinnerAdapter(requireContext(), colorNames, colorValues)
     }
 
     override fun onDestroyView() {

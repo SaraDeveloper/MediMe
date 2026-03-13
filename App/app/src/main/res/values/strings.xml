@@ -18,19 +18,30 @@
     <string name="dialog_add_color">Color:</string>
 
     <string-array name="dialog_time_options">
-        <item>8:00 AM</item>
-        <item>9:00 AM</item>
-        <item>10:00 AM</item>
-        <item>11:00 AM</item>
-        <item>12:00 PM</item>
-        <item>1:00 PM</item>
-        <item>2:00 PM</item>
-        <item>3:00 PM</item>
-        <item>4:00 PM</item>
-        <item>5:00 PM</item>
-        <item>6:00 PM</item>
-        <item>7:00 PM</item>
-        <item>8:00 PM</item>
+        <item>00:00</item>
+        <item>01:00</item>
+        <item>02:00</item>
+        <item>03:00</item>
+        <item>04:00</item>
+        <item>05:00</item>
+        <item>06:00</item>
+        <item>07:00</item>
+        <item>08:00</item>
+        <item>09:00</item>
+        <item>10:00</item>
+        <item>11:00</item>
+        <item>12:00</item>
+        <item>13:00</item>
+        <item>14:00</item>
+        <item>15:00</item>
+        <item>16:00</item>
+        <item>17:00</item>
+        <item>18:00</item>
+        <item>19:00</item>
+        <item>20:00</item>
+        <item>21:00</item>
+        <item>22:00</item>
+        <item>23:00</item>
     </string-array>
     <string-array name="dialog_till_when_options">
         <item>1 week</item>
