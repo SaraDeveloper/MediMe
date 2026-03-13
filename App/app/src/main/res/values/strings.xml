@@ -4,8 +4,53 @@
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
+    <string name="no_medime_fragment_label">I don\'t have MediMe</string>
+    <string name="no_medime_title">I don\'t have MediMe</string>
+    <string name="no_medime_message">You can get MediMe from your pharmacy or healthcare provider to start tracking your medications.</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="add">Add</string>
+    <string name="dialog_add_hint">Add something for this date.</string>
+    <string name="dialog_add_name">Name:</string>
+    <string name="dialog_add_name_hint">you can type here</string>
+    <string name="dialog_add_time">Time:</string>
+    <string name="dialog_add_till_when">Till when:</string>
+    <string name="dialog_add_color">Color:</string>
+
+    <string-array name="dialog_time_options">
+        <item>8:00 AM</item>
+        <item>9:00 AM</item>
+        <item>10:00 AM</item>
+        <item>11:00 AM</item>
+        <item>12:00 PM</item>
+        <item>1:00 PM</item>
+        <item>2:00 PM</item>
+        <item>3:00 PM</item>
+        <item>4:00 PM</item>
+        <item>5:00 PM</item>
+        <item>6:00 PM</item>
+        <item>7:00 PM</item>
+        <item>8:00 PM</item>
+    </string-array>
+    <string-array name="dialog_till_when_options">
+        <item>1 week</item>
+        <item>2 weeks</item>
+        <item>1 month</item>
+        <item>3 months</item>
+        <item>6 months</item>
+        <item>1 year</item>
+        <item>Ongoing</item>
+    </string-array>
+    <string-array name="dialog_color_options">
+        <item>Red</item>
+        <item>Blue</item>
+        <item>Green</item>
+        <item>Yellow</item>
+        <item>Orange</item>
+        <item>Purple</item>
+        <item>Pink</item>
+        <item>Teal</item>
+    </string-array>
 
     <string name="dropdown_hint">How often?</string>
     <string-array name="dropdown_options">

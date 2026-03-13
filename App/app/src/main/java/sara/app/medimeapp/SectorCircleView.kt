@@ -49,7 +49,7 @@ class SectorCircleView @JvmOverloads constructor(
         rect.set(padding, padding, size - padding, size - padding)
 
         for (i in 0 until sectorCount) {
-            sectorPaint.color = if (i % 2 == 0) 0xFFA5D8F0.toInt() else 0xFFE8A0A0.toInt() // ice blue, rose red
+            sectorPaint.color = 0xFFE0FFFF.toInt() // #E0FFFF
             val startAngle = -90f + i * sweepAngle
             canvas.drawArc(rect, startAngle, sweepAngle, true, sectorPaint)
         }

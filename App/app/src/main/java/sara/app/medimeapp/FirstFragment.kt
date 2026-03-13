@@ -37,7 +37,7 @@ class FirstFragment : Fragment() {
         }
 
         binding.buttonNoMedime.setOnClickListener {
-            // Handle "I don't have MediMe" - add your logic here
+            findNavController().navigate(R.id.action_FirstFragment_to_NoMediMeFragment)
         }
     }
 

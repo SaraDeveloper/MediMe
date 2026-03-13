@@ -10,15 +10,15 @@
     <Spinner
         android:id="@+id/dropdown"
         android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:minWidth="120dp"
+        android:layout_height="56dp"
+        android:minWidth="200dp"
         android:background="@drawable/dropdown_background"
-        android:paddingStart="12dp"
-        android:paddingEnd="12dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintWidth_max="280dp" />
+        app:layout_constraintWidth_max="320dp" />
 
     <sara.app.medimeapp.SectorCircleView
         android:id="@+id/sector_circle"
