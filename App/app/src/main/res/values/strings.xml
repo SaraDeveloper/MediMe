@@ -13,35 +13,23 @@
     <string name="dialog_add_hint">Add something for this date.</string>
     <string name="dialog_add_name">Name:</string>
     <string name="dialog_add_name_hint">you can type here</string>
-    <string name="dialog_add_time">Time:</string>
+    <string name="dialog_add_time">Every:</string>
     <string name="dialog_add_till_when">Till when:</string>
     <string name="dialog_add_color">Color:</string>
 
     <string-array name="dialog_time_options">
-        <item>00:00</item>
-        <item>01:00</item>
-        <item>02:00</item>
-        <item>03:00</item>
-        <item>04:00</item>
-        <item>05:00</item>
-        <item>06:00</item>
-        <item>07:00</item>
-        <item>08:00</item>
-        <item>09:00</item>
-        <item>10:00</item>
-        <item>11:00</item>
-        <item>12:00</item>
-        <item>13:00</item>
-        <item>14:00</item>
-        <item>15:00</item>
-        <item>16:00</item>
-        <item>17:00</item>
-        <item>18:00</item>
-        <item>19:00</item>
-        <item>20:00</item>
-        <item>21:00</item>
-        <item>22:00</item>
-        <item>23:00</item>
+        <item>Once daily</item>
+        <item>Twice daily</item>
+        <item>3 times daily</item>
+        <item>4 times daily</item>
+        <item>Every 4 hours</item>
+        <item>Every 6 hours</item>
+        <item>Every 8 hours</item>
+        <item>Every 12 hours</item>
+        <item>Every other day</item>
+        <item>Once a week</item>
+        <item>Once a month</item>
+        <item>As needed</item>
     </string-array>
     <string-array name="dialog_till_when_options">
         <item>1 week</item>
