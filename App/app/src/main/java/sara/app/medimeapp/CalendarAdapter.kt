@@ -21,6 +21,7 @@ class CalendarAdapter(
     private var selectedMonth = -1
     private var selectedDay = -1
     private val markedDates = mutableMapOf<String, Int>()
+    private val overlapDates = mutableSetOf<String>()
 
     fun setMonth(year: Int, month: Int) {
         val cal = Calendar.getInstance().apply { set(year, month, 1) }
@@ -43,6 +44,14 @@ class CalendarAdapter(
 
     fun markDate(year: Int, month: Int, day: Int, color: Int) {
         markedDates[dateKey(year, month, day)] = color
+        notifyDataSetChanged()
+    }
+
+    fun setMarkedDates(marks: Map<String, Int>, overlaps: Set<String> = emptySet()) {
+        markedDates.clear()
+        markedDates.putAll(marks)
+        overlapDates.clear()
+        overlapDates.addAll(overlaps)
         notifyDataSetChanged()
     }
 
@@ -76,10 +85,17 @@ class CalendarAdapter(
                 cell.month == selectedMonth &&
                 cell.day == selectedDay
 
-        val markedColor = markedDates[dateKey(cell.year, cell.month, cell.day)]
+        val key = dateKey(cell.year, cell.month, cell.day)
+        val isOverlap = key in overlapDates
+        val markedColor = markedDates[key]
         val dp = tv.context.resources.displayMetrics.density
 
         tv.background = when {
+            isOverlap -> GradientDrawable().apply {
+                shape = GradientDrawable.OVAL
+                setColor(if (isSelected) 0x332196F3 else Color.TRANSPARENT)
+                setStroke((2.5f * dp).toInt(), Color.BLACK)
+            }
             markedColor != null -> GradientDrawable().apply {
                 shape = GradientDrawable.OVAL
                 setColor(if (isSelected) 0x332196F3 else Color.TRANSPARENT)

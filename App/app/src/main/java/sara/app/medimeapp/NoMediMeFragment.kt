@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
@@ -13,6 +14,16 @@ import sara.app.medimeapp.databinding.FragmentNoMedimeBinding
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+
+data class MedEntry(
+    val name: String,
+    val frequencyIndex: Int,
+    val tillWhenIndex: Int,
+    val colorIndex: Int,
+    val startYear: Int,
+    val startMonth: Int,
+    val startDay: Int
+)
 
 class NoMediMeFragment : Fragment() {
 
@@ -25,6 +36,9 @@ class NoMediMeFragment : Fragment() {
     private var selectedYear = -1
     private var selectedMonth = -1
     private var selectedDay = -1
+
+    private val entries = mutableListOf<MedEntry>()
+    private val dateToEntries = mutableMapOf<String, MutableList<MedEntry>>()
 
     private val colorValues = intArrayOf(
         0xFFF44336.toInt(),
@@ -57,6 +71,13 @@ class NoMediMeFragment : Fragment() {
             selectedYear = year
             selectedMonth = month
             selectedDay = day
+
+            val entriesForDate = dateToEntries["$year-$month-$day"]
+            if (entriesForDate != null && entriesForDate.size > 1) {
+                showMedicationPicker(entriesForDate)
+            } else if (entriesForDate != null && entriesForDate.size == 1) {
+                showEditBox(entriesForDate[0])
+            }
         }
 
         binding.rvCalendarDays.layoutManager = GridLayoutManager(requireContext(), 7)
@@ -89,28 +110,129 @@ class NoMediMeFragment : Fragment() {
         )
     }
 
-    private fun showAddBox() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_add_box, null)
-        setupSpinner(dialogView.findViewById(R.id.dialog_add_time_spinner), R.array.dialog_time_options)
-        setupSpinner(dialogView.findViewById(R.id.dialog_add_till_when_spinner), R.array.dialog_till_when_options)
-        val colorSpinner: Spinner = dialogView.findViewById(R.id.dialog_add_color_spinner)
-        setupColorSpinner(colorSpinner)
+    // ---- Add new entry ----
 
+    private fun showAddBox() {
+        if (selectedDay == -1) return
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_add_box, null)
+        val nameInput: EditText = dialogView.findViewById(R.id.dialog_add_name_input)
         val freqSpinner: Spinner = dialogView.findViewById(R.id.dialog_add_time_spinner)
         val tillSpinner: Spinner = dialogView.findViewById(R.id.dialog_add_till_when_spinner)
+        val colorSpinner: Spinner = dialogView.findViewById(R.id.dialog_add_color_spinner)
+
+        setupSpinner(freqSpinner, R.array.dialog_time_options)
+        setupSpinner(tillSpinner, R.array.dialog_till_when_options)
+        setupColorSpinner(colorSpinner)
 
         MaterialAlertDialogBuilder(requireContext(), com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
             .setView(dialogView)
             .setPositiveButton(android.R.string.ok) { _, _ ->
-                if (selectedDay != -1) {
-                    val color = colorValues[colorSpinner.selectedItemPosition]
-                    val dayInterval = dayIntervalForFrequency(freqSpinner.selectedItemPosition)
-                    val totalDays = daysForDuration(tillSpinner.selectedItemPosition)
-                    markRecurringDates(selectedYear, selectedMonth, selectedDay, dayInterval, totalDays, color)
-                }
+                val entry = MedEntry(
+                    name = nameInput.text.toString(),
+                    frequencyIndex = freqSpinner.selectedItemPosition,
+                    tillWhenIndex = tillSpinner.selectedItemPosition,
+                    colorIndex = colorSpinner.selectedItemPosition,
+                    startYear = selectedYear,
+                    startMonth = selectedMonth,
+                    startDay = selectedDay
+                )
+                entries.add(entry)
+                rebuildAll()
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
+    }
+
+    // ---- Edit existing entry ----
+
+    private fun showEditBox(entry: MedEntry) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_add_box, null)
+        val nameInput: EditText = dialogView.findViewById(R.id.dialog_add_name_input)
+        val freqSpinner: Spinner = dialogView.findViewById(R.id.dialog_add_time_spinner)
+        val tillSpinner: Spinner = dialogView.findViewById(R.id.dialog_add_till_when_spinner)
+        val colorSpinner: Spinner = dialogView.findViewById(R.id.dialog_add_color_spinner)
+
+        setupSpinner(freqSpinner, R.array.dialog_time_options)
+        setupSpinner(tillSpinner, R.array.dialog_till_when_options)
+        setupColorSpinner(colorSpinner)
+
+        nameInput.setText(entry.name)
+        freqSpinner.setSelection(entry.frequencyIndex)
+        tillSpinner.setSelection(entry.tillWhenIndex)
+        colorSpinner.setSelection(entry.colorIndex)
+
+        MaterialAlertDialogBuilder(requireContext(), com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
+            .setView(dialogView)
+            .setPositiveButton(R.string.change) { _, _ ->
+                entries.remove(entry)
+                val updated = MedEntry(
+                    name = nameInput.text.toString(),
+                    frequencyIndex = freqSpinner.selectedItemPosition,
+                    tillWhenIndex = tillSpinner.selectedItemPosition,
+                    colorIndex = colorSpinner.selectedItemPosition,
+                    startYear = entry.startYear,
+                    startMonth = entry.startMonth,
+                    startDay = entry.startDay
+                )
+                entries.add(updated)
+                rebuildAll()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    // ---- Show list of overlapping medications ----
+
+    private fun showMedicationPicker(medEntries: List<MedEntry>) {
+        val names = medEntries.map { it.name }.toTypedArray()
+        MaterialAlertDialogBuilder(requireContext(), com.google.android.material.R.style.ThemeOverlay_Material3_MaterialAlertDialog)
+            .setTitle(R.string.medications_on_date)
+            .setItems(names) { _, which ->
+                showEditBox(medEntries[which])
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .show()
+    }
+
+    // ---- Rebuild all calendar marks from the entries list ----
+
+    private fun rebuildAll() {
+        dateToEntries.clear()
+        val marks = mutableMapOf<String, Int>()
+
+        for (entry in entries) {
+            val color = colorValues[entry.colorIndex]
+            val interval = dayIntervalForFrequency(entry.frequencyIndex)
+            val totalDays = daysForDuration(entry.tillWhenIndex)
+
+            forEachDate(entry.startYear, entry.startMonth, entry.startDay, interval, totalDays) { y, m, d ->
+                val key = "$y-$m-$d"
+                marks[key] = color
+                dateToEntries.getOrPut(key) { mutableListOf() }.add(entry)
+            }
+        }
+
+        val overlaps = dateToEntries.filter { it.value.size > 1 }.keys
+        calendarAdapter.setMarkedDates(marks, overlaps)
+    }
+
+    private inline fun forEachDate(
+        startY: Int, startM: Int, startD: Int,
+        interval: Int, totalDays: Int,
+        action: (Int, Int, Int) -> Unit
+    ) {
+        if (interval <= 0) {
+            action(startY, startM, startD)
+            return
+        }
+        val cal = Calendar.getInstance().apply { set(startY, startM, startD) }
+        var elapsed = 0
+        while (elapsed <= totalDays) {
+            action(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
+            cal.add(Calendar.DAY_OF_MONTH, interval)
+            elapsed += interval
+        }
     }
 
     private fun dayIntervalForFrequency(index: Int): Int = when (index) {
@@ -131,24 +253,7 @@ class NoMediMeFragment : Fragment() {
         else -> 365 // Ongoing
     }
 
-    private fun markRecurringDates(year: Int, month: Int, day: Int, interval: Int, totalDays: Int, color: Int) {
-        val cal = Calendar.getInstance().apply { set(year, month, day) }
-        if (interval <= 0) {
-            calendarAdapter.markDate(year, month, day, color)
-            return
-        }
-        var elapsed = 0
-        while (elapsed <= totalDays) {
-            calendarAdapter.markDate(
-                cal.get(Calendar.YEAR),
-                cal.get(Calendar.MONTH),
-                cal.get(Calendar.DAY_OF_MONTH),
-                color
-            )
-            cal.add(Calendar.DAY_OF_MONTH, interval)
-            elapsed += interval
-        }
-    }
+    // ---- Spinner helpers ----
 
     private fun setupSpinner(spinner: Spinner, optionsResId: Int) {
         val options = resources.getStringArray(optionsResId)
