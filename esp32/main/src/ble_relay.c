@@ -100,10 +100,18 @@ static int ble_relay_gap_event(struct ble_gap_event *event, void *arg)
         }
         return 0;
 
-    case BLE_GAP_EVENT_DISCONNECT:
-        ESP_LOGI(TAG, "disconnect; reason=%d", event->disconnect.reason);
+    case BLE_GAP_EVENT_DISCONNECT: {
+        int reason = event->disconnect.reason;
+        uint8_t r = (uint8_t)(reason & 0xFF);
+        if (reason == 520 || r == 0x08)
+            ESP_LOGI(TAG, "disconnect; reason=%d = connection timeout", reason);
+        else if (reason == 531 || r == 0x13)
+            ESP_LOGI(TAG, "disconnect; reason=%d = remote closed (phone/app disconnected)", reason);
+        else
+            ESP_LOGI(TAG, "disconnect; reason=%d", reason);
         ble_relay_advertise();
         return 0;
+    }
 
     case BLE_GAP_EVENT_ADV_COMPLETE:
         ble_relay_advertise();

@@ -70,12 +70,30 @@ class BleRelayActivity : AppCompatActivity() {
 
     private val gattCallback = object : android.bluetooth.BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
+            runOnUiThread {
+                if (status != BluetoothGatt.GATT_SUCCESS && newState == BluetoothGatt.STATE_DISCONNECTED) {
+                    binding.statusText.text = getString(R.string.ble_relay_status_disconnected)
+                    setConnected(false)
+                    // 22 = local host terminated (timeout/SMP); 133 = common when using system Bluetooth
+                    val msg = when (status) {
+                        22 -> "Connection lost (22). Try again; keep phone close to MediMe."
+                        133 -> "Connection failed (133). Use \"Scan and connect\" here, not system Bluetooth."
+                        else -> "Connection failed (status=$status). Try again or move closer."
+                    }
+                    Toast.makeText(this@BleRelayActivity, msg, Toast.LENGTH_LONG).show()
+                    Log.w(TAG, "onConnectionStateChange status=$status newState=$newState")
+                }
+            }
             when (newState) {
                 BluetoothGatt.STATE_CONNECTED -> {
                     if (ActivityCompat.checkSelfPermission(this@BleRelayActivity, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
                         return
                     }
-                    gatt?.discoverServices()
+                    // Brief delay before discoverServices() to avoid status 22 (local host terminate) on some devices
+                    handler.postDelayed({
+                        if (ActivityCompat.checkSelfPermission(this@BleRelayActivity, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) return@postDelayed
+                        gatt?.discoverServices()
+                    }, 300)
                 }
                 BluetoothGatt.STATE_DISCONNECTED -> {
                     runOnUiThread {
@@ -229,7 +247,13 @@ class BleRelayActivity : AppCompatActivity() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
             return
         }
-        bluetoothGatt = device.connectGatt(this, false, gattCallback)
+        runOnUiThread { binding.statusText.text = getString(R.string.ble_relay_status_connecting) }
+        // Use BLE transport explicitly so Android doesn't try classic Bluetooth (MediMe is BLE-only)
+        bluetoothGatt = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            device.connectGatt(this, false, gattCallback, BluetoothDevice.TRANSPORT_LE)
+        } else {
+            device.connectGatt(this, false, gattCallback)
+        }
     }
 
     private fun setConnected(connected: Boolean) {

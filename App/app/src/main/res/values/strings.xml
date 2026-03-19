@@ -56,7 +56,9 @@
     <string name="action_ble_relay">BLE Relay</string>
     <string name="ble_relay_status_disconnected">Status: Disconnected</string>
     <string name="ble_relay_status_connected">Status: Connected to MediMe</string>
+    <string name="ble_relay_status_connecting">Status: Connecting…</string>
     <string name="ble_relay_status_scanning">Status: Scanning…</string>
+    <string name="ble_relay_hint_use_app">Connect here with the button below. Do not use Android Settings → Bluetooth to connect.</string>
     <string name="ble_relay_scan_connect">Scan and connect to MediMe</string>
     <string name="ble_relay_relay1_on">Relay 1 ON</string>
     <string name="ble_relay_relay1_off">Relay 1 OFF</string>
