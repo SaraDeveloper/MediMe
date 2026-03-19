@@ -1,55 +1,28 @@
 /**
- * MediMe ESP32 - LED Blink + Relay
+ * MediMe ESP32 - BLE Relay Control
  *
- * - LED on GPIO 23 blinks every 500 ms.
- * - Relay 1 on GPIO 16 follows the LED (on when LED on, off when LED off).
- * - Relay 2 on GPIO 17 is available via RelayOn(2) / RelayOff(2).
- *
- * Same relay GPIOs as web-relay: Relay 1 = GPIO 16, Relay 2 = GPIO 17.
+ * - BLE GATT server with device name "MediMe".
+ * - Relay 1 (GPIO 16) / Relay 2 (GPIO 17) controlled via BLE writes:
+ *   write 0x01 to relay characteristic -> Relay 1 ON, 0x00 -> Relay 1 OFF.
  */
 
 #include "relay.h"
-#include "driver/gpio.h"
+#include "ble_relay.h"
 #include "esp_log.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+#include "nvs_flash.h"
 
-/* ----- Configuration ----- */
-#define LED_GPIO       GPIO_NUM_23   /* Pin where the LED is connected */
-#define BLINK_DELAY_MS 500           /* Time between each blink (milliseconds) */
+static const char *TAG = "main";
 
-static const char *TAG = "blink";
-
-/* ----- Setup: configure the LED pin as output ----- */
-static void setup_led(void)
-{
-    gpio_reset_pin(LED_GPIO);
-    gpio_set_direction(LED_GPIO, GPIO_MODE_OUTPUT);
-}
-
-/* ----- Main entry point (called once at startup) ----- */
 void app_main(void)
 {
-    setup_led();
-    RelayInit();
-
-    bool led_is_on = false;
-
-    while (1)
-    {
-        /* Toggle LED: on -> off, off -> on */
-        led_is_on = !led_is_on;
-        gpio_set_level(LED_GPIO, led_is_on ? 1 : 0);
-
-        /* Relay 1 follows the LED */
-        if (led_is_on)
-            RelayOn(1);
-        else
-            RelayOff(1);
-
-        ESP_LOGI(TAG, "LED %s, Relay1 %s", led_is_on ? "ON" : "OFF", led_is_on ? "ON" : "OFF");
-
-        /* Wait before next blink */
-        vTaskDelay(pdMS_TO_TICKS(BLINK_DELAY_MS));
+    esp_err_t ret = nvs_flash_init();
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        ret = nvs_flash_init();
     }
+    ESP_ERROR_CHECK(ret);
+
+    RelayInit();
+    ESP_LOGI(TAG, "MediMe BLE Relay starting");
+    ble_relay_init();
 }

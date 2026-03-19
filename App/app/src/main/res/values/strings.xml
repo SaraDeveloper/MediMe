@@ -53,6 +53,14 @@
         <item>Teal</item>
     </string-array>
 
+    <string name="action_ble_relay">BLE Relay</string>
+    <string name="ble_relay_status_disconnected">Status: Disconnected</string>
+    <string name="ble_relay_status_connected">Status: Connected to MediMe</string>
+    <string name="ble_relay_status_scanning">Status: Scanning…</string>
+    <string name="ble_relay_scan_connect">Scan and connect to MediMe</string>
+    <string name="ble_relay_relay1_on">Relay 1 ON</string>
+    <string name="ble_relay_relay1_off">Relay 1 OFF</string>
+
     <string name="dropdown_hint">How often?</string>
     <string-array name="dropdown_options">
         <item>Every 2 hours</item>

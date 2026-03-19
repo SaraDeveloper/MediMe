@@ -1,5 +1,6 @@
 package sara.app.medimeapp
 
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -42,10 +43,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         return when (item.itemId) {
+            R.id.action_ble_relay -> {
+                startActivity(Intent(this, BleRelayActivity::class.java))
+                true
+            }
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
