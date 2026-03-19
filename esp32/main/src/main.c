@@ -1,13 +1,13 @@
 /**
- * MediMe ESP32 - BLE Relay Control
+ * MediMe ESP32 - Bluetooth Classic SPP Relay Control
  *
- * - BLE GATT server with device name "MediMe".
- * - Relay 1 (GPIO 16) / Relay 2 (GPIO 17) controlled via BLE writes:
- *   write 0x01 to relay characteristic -> Relay 1 ON, 0x00 -> Relay 1 OFF.
+ * - SPP server with device name "MediMe". Pair from phone (PIN 1234), then connect from app.
+ * - Relay 1 (GPIO 16) / Relay 2 (GPIO 17): send 0x01 = Relay 1 ON, 0x00 = Relay 1 OFF over SPP.
+ * - BLE code (ble_relay.*) kept in tree but not built.
  */
 
 #include "relay.h"
-#include "ble_relay.h"
+#include "bt_spp_relay.h"
 #include "esp_log.h"
 #include "nvs_flash.h"
 
@@ -23,6 +23,6 @@ void app_main(void)
     ESP_ERROR_CHECK(ret);
 
     RelayInit();
-    ESP_LOGI(TAG, "MediMe BLE Relay starting");
-    ble_relay_init();
+    ESP_LOGI(TAG, "MediMe SPP Relay starting");
+    bt_spp_relay_init();
 }

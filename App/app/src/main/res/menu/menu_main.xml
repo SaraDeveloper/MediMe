@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="sara.app.medimeapp.MainActivity">
     <item
+        android:id="@+id/action_spp_relay"
+        android:orderInCategory="40"
+        android:title="@string/action_spp_relay"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_ble_relay"
         android:orderInCategory="50"
         android:title="@string/action_ble_relay"

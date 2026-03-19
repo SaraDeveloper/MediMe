@@ -1,0 +1,7 @@
+menu "MediMe SPP Relay Configuration"
+    config MEDIME_BT_DEVICE_NAME
+        string "Bluetooth device name (SPP server)"
+        default "MediMe"
+        help
+            Name shown when pairing. Use "MediMe" for the Android app to find the device.
+endmenu

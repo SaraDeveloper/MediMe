@@ -44,6 +44,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_spp_relay -> {
+                startActivity(Intent(this, SppRelayActivity::class.java))
+                true
+            }
             R.id.action_ble_relay -> {
                 startActivity(Intent(this, BleRelayActivity::class.java))
                 true

@@ -29,6 +29,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".SppRelayActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/Theme.MediMeApp" />
+        <activity
             android:name=".BleRelayActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
