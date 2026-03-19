@@ -4,7 +4,7 @@
  * - SPP server with device name "MediMe". Pair from phone (PIN 1234), then connect from app.
  * - Relay 1 (GPIO 16) / Relay 2 (GPIO 17): send 0x01 = Relay 1 ON, 0x00 = Relay 1 OFF over SPP.
  * - Hall sensor: GPIO 34. Rotate(): relay 1 ON, continuously monitors sensor, stops immediately when sensor = 0.
- * - LED: GPIO 2 blinks continuously (500 ms period).
+ * - LED: GPIO 23 blinks continuously (500 ms period).
  * - TEST: rotate_test_task calls Rotate() every 10 s (remove for production).
  * - BLE code (ble_relay.*) kept in tree but not built.
  */
@@ -20,7 +20,7 @@
 
 static const char *TAG = "main";
 
-#define LED_GPIO GPIO_NUM_2
+#define LED_GPIO GPIO_NUM_23
 #define LED_BLINK_PERIOD_MS 500
 
 static void led_blink_task(void *arg)
