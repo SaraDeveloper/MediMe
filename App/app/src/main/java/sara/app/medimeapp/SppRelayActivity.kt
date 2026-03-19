@@ -48,6 +48,7 @@ class SppRelayActivity : AppCompatActivity() {
         }
         binding.buttonRelay1On.setOnClickListener { writeRelay(0x01) }
         binding.buttonRelay1Off.setOnClickListener { writeRelay(0x00) }
+        binding.buttonRotate.setOnClickListener { writeRelay(0x02) }
     }
 
     override fun onDestroy() {
@@ -147,6 +148,7 @@ class SppRelayActivity : AppCompatActivity() {
     private fun setConnected(connected: Boolean) {
         binding.buttonRelay1On.isEnabled = connected
         binding.buttonRelay1Off.isEnabled = connected
+        binding.buttonRotate.isEnabled = connected
         binding.buttonConnect.isEnabled = !connected
         if (!connected) {
             binding.statusText.text = getString(R.string.spp_relay_status_disconnected)

@@ -62,6 +62,7 @@
     <string name="spp_relay_pair_hint">Pair MediMe in Settings → Bluetooth first, then connect here.</string>
     <string name="spp_relay_relay1_on">Relay 1 ON</string>
     <string name="spp_relay_relay1_off">Relay 1 OFF</string>
+    <string name="spp_relay_rotate">Rotate</string>
     <string name="ble_relay_status_disconnected">Status: Disconnected</string>
     <string name="ble_relay_status_connected">Status: Connected to MediMe</string>
     <string name="ble_relay_status_connecting">Status: Connecting…</string>

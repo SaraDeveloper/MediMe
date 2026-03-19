@@ -31,7 +31,19 @@ static void rotate_task(void *arg)
     RelayOn(1);
     ESP_LOGI(TAG, "Motor ON, monitoring hall sensor");
 
+    TickType_t start_time = xTaskGetTickCount();
+    const TickType_t ignore_period_ticks = pdMS_TO_TICKS(500);
+
     for (;;) {
+        TickType_t current_time = xTaskGetTickCount();
+        TickType_t elapsed = current_time - start_time;
+
+        // Ignore sensor readings for the first 500ms
+        if (elapsed < ignore_period_ticks) {
+            vTaskDelay(pdMS_TO_TICKS(SENSOR_POLL_INTERVAL_MS));
+            continue;
+        }
+
         int level = gpio_get_level(HALL_GPIO);
         if (level == 0) {
             RelayOff(1);

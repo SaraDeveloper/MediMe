@@ -19,6 +19,7 @@
 #include "spp_task.h"
 #include "bt_spp_relay.h"
 #include "relay.h"
+#include "hall_rotate.h"
 
 static const char *TAG = "bt_spp_relay";
 
@@ -70,6 +71,9 @@ static void spp_relay_read_handle(void *param)
             } else if (b == 0x00) {
                 RelayOff(1);
                 ESP_LOGI(TAG, "Relay 1 OFF");
+            } else if (b == 0x02) {
+                Rotate();
+                ESP_LOGI(TAG, "Rotate command received");
             }
         }
         vTaskDelay(10 / portTICK_PERIOD_MS);

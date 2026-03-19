@@ -5,7 +5,6 @@
  * - Relay 1 (GPIO 16) / Relay 2 (GPIO 17): send 0x01 = Relay 1 ON, 0x00 = Relay 1 OFF over SPP.
  * - Hall sensor: GPIO 34. Rotate(): relay 1 ON, continuously monitors sensor, stops immediately when sensor = 0.
  * - LED: GPIO 23 blinks continuously (500 ms period).
- * - TEST: rotate_test_task calls Rotate() every 10 s (remove for production).
  * - BLE code (ble_relay.*) kept in tree but not built.
  */
 
@@ -34,17 +33,6 @@ static void led_blink_task(void *arg)
     }
 }
 
-/** TEST: calls Rotate() every 10 s; remove or disable for production. */
-static void rotate_test_task(void *arg)
-{
-    (void)arg;
-    for (;;) {
-        ESP_LOGI(TAG, "rotate test: calling Rotate()");
-        Rotate();
-        vTaskDelay(pdMS_TO_TICKS(10000));
-    }
-}
-
 void app_main(void)
 {
     esp_err_t ret = nvs_flash_init();
@@ -62,6 +50,4 @@ void app_main(void)
     HallRotateInit();
     ESP_LOGI(TAG, "MediMe SPP Relay starting");
     bt_spp_relay_init();
-
-    xTaskCreate(rotate_test_task, "rotate_test", 3072, NULL, 3, NULL);
 }
