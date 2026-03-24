@@ -7,8 +7,8 @@
 void HallRotateInit(void);
 
 /**
- * @brief Turn relay 1 ON (motor), continuously monitor hall sensor, stop immediately when sensor = 0.
- * Runs asynchronously in a short-lived task (safe to call from any task).
+ * @brief Turn relay 1 ON (motor), then stop on hall sensor falling edge (GPIO interrupt, not slow polling).
+ * Short ignore window after start avoids false triggers; runs in a short-lived task (safe from any task).
  */
 void Rotate(void);
 
